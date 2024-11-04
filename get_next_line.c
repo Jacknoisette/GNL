@@ -12,40 +12,74 @@
 
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+static char *read_and_store(int fd, char *buffer, char *store)
 {
-	static char	*buffer[BUFFERSIZE] = {0};
-	ssize_t readbyte;
-	char *store;
-	size_t	i;
-	
-	i = 0;
-	if (ft_strchr(buffer, '\n') != NULL)
-	{
-		store = (char *)malloc((strendl(buffer) + 1) * sizeof(char));
-		if (store == NULL)
-			return (NULL);
-		while (buffer[i] != 'n')
-			store[i++] == buffer[i];
-		ft_subcpy(buffer, buffer, i);
-		return (store[i] = '\0', store);
-	}
-	readbyte = read(fd, *buffer, BUFFERSIZE);
-	if (readbyte == 0 || readbyte == -1)
-		return (NULL);
-	if (readbyte < BUFFERSIZE)
-	{
-	}
+    char *temp;
+    ssize_t readbyte;
+
+    readbyte = read(fd, buffer, BUFFER_SIZE);
+    if (readbyte == -1)
+        return (NULL);
+    if (readbyte == 0)
+        return (store);
+    buffer[readbyte] = '\0';
+    if (store != NULL)
+    {
+        temp = store;
+        store = ft_strjoin(temp, buffer);
+        free(temp);
+    }
+    else
+		store = ft_strdup(buffer);
+    return (store);
 }
 
-
-
-ssize_t strendl(char *buf)
+static char *extract_line(char **store)
 {
-	int	i;
+    char *line;
+    char *enl_pos;
 
-	i = 0;
-	while(i != '\n')
-		i++;
-	return (i);
+    enl_pos = ft_strchr(*store, '\n');
+    if (enl_pos != NULL)
+    {
+        line = ft_substr(*store, 0, enl_pos - *store + 1);
+       * store = ft_strdup(enl_pos + 1);
+    }
+    else
+    {
+        line = ft_strdup(*store);
+        *store = NULL;
+    }
+    return (line);
+}
+
+char *get_next_line(int fd)
+{
+	static char	*store;
+	char	buffer[BUFFER_SIZE + 1] = {0};
+	char *line;
+	
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+
+	store = read_and_store(fd, buffer, store);
+	if (store != NULL)
+		return (NULL);
+	line = extract_line(&store);
+	return (line);
+}
+
+int	main(void)
+{
+    char *line;
+    int fd = open("file.txt", O_RDONLY);
+
+    while ((line = get_next_line(0)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
+
+    close(fd);
+    return 0;
 }

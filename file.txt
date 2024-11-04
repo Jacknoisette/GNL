@@ -1,0 +1,20 @@
+Bien sûr, voici un texte de faux latin avec des sauts de lignes pour tester ta fonction GNL. Ce texte contient de nombreux caractères aléatoires pour simuler une grande variété de lignes.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vulputate metus id ligula pulvinar, ac cursus urna luctus.
+
+Curabitur ac interdum metus. Donec rutrum, eros sit amet feugiat aliquet, sem ligula condimentum mi, sed vestibulum orci tincidunt nulla. Nunc vitae felis magna. Quisque fringilla, velit id condimentum ornare, mi erat ornare lectus, sit amet suscipit erat nunc quis magna.
+
+Aliquam pharetra:
+
+Mauris semper
+Nulla ornare
+Fusce non justo
+Vestibulum fermentum consequat ornare. Suspendisse sit amet nisl eget mi efficitur vestibulum. Curabitur luctus, mauris sit amet auctor dapibus, mauris sem viverra mi, non consequat justo quam non justo. Nullam a urna non ex fermentum dapibus.
+
+Ut vitae velit convallis, euismod erat in, pulvinar lorem.
+
+Cras ultricies auctor purus, non congue enim posuere sed. Vestibulum suscipit magna id metus faucibus, sit amet bibendum turpis maximus.
+
+Morbi a laoreet ante. Ut venenatis ligula sit amet neque consequat, sed iaculis purus ornare. Phasellus elementum facilisis lacus, nec eleifend tortor venenatis eget. Suspendisse potenti.
+
+Duis ornare purus id ipsum pretium tincidunt.
