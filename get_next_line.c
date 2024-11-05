@@ -1,85 +1,120 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jdhallen <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/30 09:13:12 by jdhallen          #+#    #+#             */
-/*   Updated: 2024/10/30 09:13:20 by jdhallen         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   get_next_line.c									:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: jdhallen <marvin@42.fr>					+#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/10/30 09:13:12 by jdhallen		  #+#	#+#			 */
+/*   Updated: 2024/10/30 09:13:20 by jdhallen		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *read_and_store(int fd, char *buffer, char *store)
+static char	*read_and_store(int fd, char *store)
 {
-    char *temp;
-    ssize_t readbyte;
+	char	*temp;
+	ssize_t	readbyte;
+	char	*local;
 
-    readbyte = read(fd, buffer, BUFFER_SIZE);
-    if (readbyte == -1)
-        return (NULL);
-    if (readbyte == 0)
-        return (store);
-    buffer[readbyte] = '\0';
-    if (store != NULL)
-    {
-        temp = store;
-        store = ft_strjoin(temp, buffer);
-        free(temp);
-    }
-    else
-		store = ft_strdup(buffer);
-    return (store);
+	local = malloc(BUFFER_SIZE + 1);
+	if (local == NULL)
+		return (NULL);
+	while (ft_strchr(store, '\n') == NULL)
+	{
+		readbyte = read(fd, local, BUFFER_SIZE);
+		if (readbyte == -1)
+			return (free(local), free(store), NULL);
+		if (readbyte == 0)
+			break ;
+		local[readbyte] = '\0';
+		temp = store;
+		store = ft_strjoin(store, local);
+		free(temp);
+		if (store == NULL)
+			break ;
+	}
+	return (free(local), store);
 }
 
-static char *extract_line(char **store)
+static char	*extract_line(char **store)
 {
-    char *line;
-    char *enl_pos;
+	char	*line;
+	char	*enl_pos;
+	char	*temp;
 
-    enl_pos = ft_strchr(*store, '\n');
-    if (enl_pos != NULL)
-    {
-        line = ft_substr(*store, 0, enl_pos - *store + 1);
-       * store = ft_strdup(enl_pos + 1);
-    }
-    else
-    {
-        line = ft_strdup(*store);
-        *store = NULL;
-    }
-    return (line);
-}
-
-char *get_next_line(int fd)
-{
-	static char	*store;
-	char	buffer[BUFFER_SIZE + 1] = {0};
-	char *line;
-	
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (*store == NULL || **store == '\0')
 		return (NULL);
-
-	store = read_and_store(fd, buffer, store);
-	if (store != NULL)
-		return (NULL);
-	line = extract_line(&store);
+	enl_pos = ft_strchr(*store, '\n');
+	if (enl_pos == NULL)
+	{
+		line = ft_strdup(*store);
+		free(*store);
+		*store = NULL;
+		return (line);
+	}
+	line = ft_substr(*store, 0, enl_pos - *store + 1);
+	temp = *store;
+	*store = ft_strdup(enl_pos + 1);
+	free(temp);
 	return (line);
 }
 
-int	main(void)
+static size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-    char *line;
-    int fd = open("file.txt", O_RDONLY);
+	size_t	i;
+	size_t	ls;
 
-    while ((line = get_next_line(0)) != NULL)
-    {
-        printf("%s", line);
-        free(line);
-    }
-
-    close(fd);
-    return 0;
+	i = 0;
+	ls = 0;
+	while (src[ls] != '\0')
+		ls++;
+	if (size == 0)
+		return (ls);
+	while (i < size - 1 && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (ls);
 }
+
+char	*get_next_line(int fd)
+{
+	static char		buffer[BUFFER_SIZE + 1] = {0};
+	char			*store;
+	char			*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	store = ft_strdup(buffer);
+	if (ft_strchr(store, '\n') == NULL)
+	{
+		store = read_and_store(fd, store);
+		if (store == NULL)
+			return (NULL);
+	}
+	line = extract_line(&store);
+	if (store != NULL && *store != '\0')
+		ft_strlcpy(buffer, store, BUFFER_SIZE + 1);
+	else
+		buffer[0] = '\0';
+	free(store);
+	return (line);
+}
+
+// int	main(void)
+// {
+// 	char	*line;
+// 	int		fd = open("file.txt", O_RDONLY);
+
+// 	while ((line = get_next_line(fd)) != NULL)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// 	return 0;
+// }
