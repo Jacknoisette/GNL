@@ -1,4 +1,37 @@
-aaaaaaaaaa
-bbbbbbbbbb
-cccccccccc
-dddddddddd
+A a: /\
+B b: 8
+C c: (
+D d: #
+E e : <
+F f : /"
+G g: &
+H h:|-|
+I i : !
+J j : /
+K k: |{
+L l: |
+M m: |\/|
+N n: |\|
+O o: 0
+P p: |^
+Q q: 0,
+R r: |~,
+S s: $
+T t: +
+U u:_
+V v:^
+W w:^^
+X x: #
+Y y: ?
+Z z: :/:
+
+1 : I
+2 : Z
+3 : E
+4 : K
+5 : F
+6 : L
+7 : T
+8 : B
+9 : P
+0 : O

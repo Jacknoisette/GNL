@@ -10,7 +10,7 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*read_and_store(int fd, char *store)
 {
@@ -89,13 +89,13 @@ static size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 
 char	*get_next_line(int fd)
 {
-	static char		buffer[BUFFER_SIZE + 1] = {0};
+	static char		buffer[MAX_FD][BUFFER_SIZE + 1];
 	char			*store;
 	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	store = ft_strdup(buffer);
+	store = ft_strdup(buffer[fd]);
 	if (store == NULL)
 		return (NULL);
 	if (ft_strchr(store, '\n') == NULL)
@@ -106,27 +106,29 @@ char	*get_next_line(int fd)
 	}
 	line = extract_line(&store);
 	if (store != NULL && *store != '\0')
-		ft_strlcpy(buffer, store, BUFFER_SIZE + 1);
+		ft_strlcpy(buffer[fd], store, BUFFER_SIZE + 1);
 	else
-		buffer[0] = '\0';
+		buffer[fd][0] = '\0';
 	free(store);
 	return (line);
 }
 
-int	main(void)
-{
-	char	*line;
-	int		i;
-	int		fd = open("file2.txt", O_RDONLY);
+// int	main(void)
+// {
+// 	char	*line;
+// 	int		fd1 = open("lines_around_10.txt", O_RDONLY);
+// 	int		fd2 = open("file.txt", O_RDONLY);
 
-	i = 100;
-	while (i)
-	{
-		line = get_next_line(42);
-		printf("%s", line);
-		free(line);
-		i--;
-	}
-	close(fd);
-	return 0;
-}
+// 	while (100)
+// 	{
+// 		line = get_next_line(fd1);
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd2);
+// 		printf("%s", line);
+// 		free(line);
+// 	}
+// 	close(fd1);
+// 	close(fd2);
+// 	return 0;
+// }
