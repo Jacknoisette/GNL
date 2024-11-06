@@ -10,7 +10,7 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*read_and_store(int fd, char *store)
 {
@@ -89,26 +89,26 @@ static size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 
 char	*get_next_line(int fd)
 {
-	static char		buffer[BUFFER_SIZE + 1] = {0};
+	static char		buffer[MAX_FD][BUFFER_SIZE + 1] = {NULL, 0};
 	char			*store;
 	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	store = ft_strdup(buffer);
+	store = ft_strdup(buffer[fd]);
 	if (store == NULL)
 		return (NULL);
 	if (ft_strchr(store, '\n') == NULL)
 	{
-		store = read_and_store(fd, store);
-		if (store == NULL)
-			return (NULL);
+	store = read_and_store(fd, store);
+	if (store == NULL)
+		return (NULL);
 	}
 	line = extract_line(&store);
 	if (store != NULL && *store != '\0')
-		ft_strlcpy(buffer, store, BUFFER_SIZE + 1);
+		ft_strlcpy(buffer[fd], store, BUFFER_SIZE + 1);
 	else
-		buffer[0] = '\0';
+		buffer[fd][0] = '\0';
 	free(store);
 	return (line);
 }
